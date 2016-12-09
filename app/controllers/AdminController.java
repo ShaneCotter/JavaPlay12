@@ -14,6 +14,13 @@ import views.html.admin.*;
 import models.*;
 import models.users.User;
 
+
+import play.mvc.Http.*;
+import play.mvc.Http.MultipartFormData.FilePart;
+import java.io.File;
+
+import org.im4java.core.ConvertCmd;
+import org.im4java.core.IMOperation;
 // Require Login
 @Security.Authenticated(Secured.class)
 // Authorise user (check if admin)
@@ -92,9 +99,14 @@ public class AdminController extends Controller {
             p.update();
         }
 
+
+        MultipartFormData data = request().body().asMultipartFormData();
+        FilePart image = data.getFile("upload");
+
+        saveImageMsg = saveFile(p.getId(), image);
         // Set a success message in temporary flash
         // for display in return view
-        flash("success", "Product " + p.getName() + " has been created/ updated");
+        flash("success", "Product " + p.getName() + " has been created/ updated" + saveImageMsg);
 
         // Redirect to the admin home
         return redirect(routes.AdminController.products(0));
@@ -136,4 +148,12 @@ public class AdminController extends Controller {
         return redirect(routes.AdminController.products(0));
     }
 
+    public String saveFile(Long id, FilePart uploaded){
+       if (uploaded != null){
+          String fileName = uploaded.getFilename();
+
+          String extension = "";
+       }
+
+    }
 }
